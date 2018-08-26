@@ -1,0 +1,23 @@
+{
+  "name": "movie-db",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^1.5.1",
+    "@material-ui/icons": "^1.1.1",
+    "axios": "^0.18.0",
+    "electron": "^2.0.8",
+    "nodeless-trakt": "^1.0.0",
+    "react": "^16.4.2",
+    "react-dom": "^16.4.2",
+    "react-scripts": "1.1.5",
+    "trakt.tv": "^7.0.0",
+    "trakt.tv-images": "^5.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
