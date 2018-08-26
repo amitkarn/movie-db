@@ -3,9 +3,10 @@ import * as axios from "axios";
  * Created by mymac on 26/08/18.
  */
 
+//Instance of Axios for multiple API requests
 const instance = axios.create({
     baseURL: 'https://api.trakt.tv/',
-    timeout: 10000,
+    timeout: 50000,
     headers: {
         "content-type": "application/json",
         "trakt-api-version": "2",

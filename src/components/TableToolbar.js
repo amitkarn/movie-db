@@ -53,6 +53,10 @@ class TableToolbar extends React.Component {
         this.props.onSelectionChange(event.target.value);
     };
 
+    /*
+     * This will render toolbar for Tables with heading and Selection dropdown
+     *
+     * */
 
     render() {
         const {classes} = this.props;

@@ -1,5 +1,5 @@
 /**
- * Created by mymac on 25/08/18.
+ * Created by mymac on 26/08/18.
  */
 import React from "react";
 import PropTypes from "prop-types";
@@ -18,7 +18,8 @@ import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
 import {Link} from "react-router-dom";
-import TableToolbar from "./TableToolbar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 const actionsStyles = theme => ({
     root: {
         flexShrink: 0,
@@ -48,10 +49,10 @@ class TablePaginationActions extends React.Component {
         );
     };
 
-    /*
-     * This will render pagination footer for the list components
-     *
-     * */
+    componentWillMount() {
+
+    }
+
     render() {
         const {classes, count, page, rowsPerPage, theme} = this.props;
 
@@ -114,7 +115,7 @@ const styles = theme => ({
     tableWrapper: {}
 });
 
-class DataList extends React.Component {
+class CastList extends React.Component {
     state = {
         rows: [],
         page: 0,
@@ -139,42 +140,36 @@ class DataList extends React.Component {
     };
 
     render() {
-        const {classes, list, isAMovie} = this.props;
+        const {classes, list} = this.props;
         const {rows, rowsPerPage, page} = this.state;
-
-        /*
-         * This will render List of Movies which are popular or Trending
-         *
-         * */
-
+        console.log(this.props);
         return (
             <Paper className={classes.root}>
                 <div className={classes.tableWrapper}>
-                    <TableToolbar name={this.props.name} movies={this.props.movies}
-                                  onSelectionChange={this.handleSelectionChange}/>
+                    <Toolbar>
+                        <div className={classes.title}>
+                            <Typography variant="title" id="tableTitle">
+                                {`Cast List`}
+                            </Typography>
+                        </div>
+                        </Toolbar>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell component="th" scope="row"><strong>Title</strong></TableCell>
-                                <TableCell><strong>Released Date</strong></TableCell>
-                                <TableCell><strong>Ratings</strong></TableCell>
+                                <TableCell>Sl. No.</TableCell>
+                                <TableCell>Character</TableCell>
+                                <TableCell component="th" scope="row">Actor Name</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.props.list.data ?
-                                this.props.list.data.results.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                                    return (
-                                        <MovieRow data={{data:row}}/>
-                                    )
-                                })
-                                :
+                            {
                                 list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                                     return (
-                                        <MovieRow data={row}/>
+                                        <PersonRow data={row}/>
                                     )
                                 })
                             }
+
                         </TableBody>
                         <TableFooter>
                             <TableRow>
@@ -198,29 +193,23 @@ class DataList extends React.Component {
 
 }
 
-const MovieRow = (props)=> {
-    const {data} = props.data;
-    console.log(props);
+const PersonRow = (props) => {
+    const {data} = props;
+    console.log(props.data);
     return (
-        <TableRow key={data.id}>
-
-            <TableCell>
-                <Avatar path={data.poster_path} title={''}/>
-            </TableCell>
-            <TableCell component="th" scope="row" style={{fontSize: '16px', color: '#f50057 rtant'}}>
+        <TableRow key={data.person.ids.tmdb}>
+            <TableCell>{data.person.ids.tmdb}</TableCell>
+            <TableCell>{data.character}</TableCell>
+            <TableCell component="th" scope="row">
                 <Link to={{
-                    pathname: `/movie/${props.data.traktId}`,
+                    pathname: `/person/${data.person.ids.tmdb}`,
                     state: {
                         data: data,
-                        isAMovie: true,
-
                     }
                 }}>
-                    {data.original_title}
+                    {data.person.name}
                 </Link>
             </TableCell>
-            <TableCell>{data.release_date}</TableCell>
-            <TableCell>{data.vote_average}</TableCell>
         </TableRow>
     )
 }
@@ -234,11 +223,11 @@ const Avatar = (props) => {
     )
 }
 
-DataList.propTypes = {
+CastList.propTypes = {
     classes: PropTypes.object.isRequired,
     list: PropTypes.array.isRequired,
     isAMovie: PropTypes.bool.isRequired,
     onSelectionChange: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(DataList);
+export default withStyles(styles)(CastList);

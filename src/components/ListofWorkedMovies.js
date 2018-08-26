@@ -1,5 +1,5 @@
 /**
- * Created by mymac on 25/08/18.
+ * Created by mymac on 26/08/18.
  */
 import React from "react";
 import PropTypes from "prop-types";
@@ -17,8 +17,8 @@ import FirstPageIcon from "@material-ui/icons/FirstPage";
 import KeyboardArrowLeft from "@material-ui/icons/KeyboardArrowLeft";
 import KeyboardArrowRight from "@material-ui/icons/KeyboardArrowRight";
 import LastPageIcon from "@material-ui/icons/LastPage";
-import {Link} from "react-router-dom";
-import TableToolbar from "./TableToolbar";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 const actionsStyles = theme => ({
     root: {
         flexShrink: 0,
@@ -48,10 +48,10 @@ class TablePaginationActions extends React.Component {
         );
     };
 
-    /*
-     * This will render pagination footer for the list components
-     *
-     * */
+    componentWillMount() {
+
+    }
+
     render() {
         const {classes, count, page, rowsPerPage, theme} = this.props;
 
@@ -114,7 +114,7 @@ const styles = theme => ({
     tableWrapper: {}
 });
 
-class DataList extends React.Component {
+class ListOfWorkedMovies extends React.Component {
     state = {
         rows: [],
         page: 0,
@@ -138,49 +138,48 @@ class DataList extends React.Component {
         this.setState({rowsPerPage: event.target.value});
     };
 
+    /*
+     * This will render List of worked movies by an actor
+     *
+     * */
+
     render() {
-        const {classes, list, isAMovie} = this.props;
+        const {classes, list} = this.props;
         const {rows, rowsPerPage, page} = this.state;
-
-        /*
-         * This will render List of Movies which are popular or Trending
-         *
-         * */
-
+        console.log(this.props);
         return (
             <Paper className={classes.root}>
                 <div className={classes.tableWrapper}>
-                    <TableToolbar name={this.props.name} movies={this.props.movies}
-                                  onSelectionChange={this.handleSelectionChange}/>
+                    <Toolbar>
+                        <div className={classes.title}>
+                            <Typography variant="title" id="tableTitle">
+                                {`List of worked movies`}
+                            </Typography>
+                        </div>
+                    </Toolbar>
                     <Table className={classes.table}>
                         <TableHead>
                             <TableRow>
-                                <TableCell></TableCell>
-                                <TableCell component="th" scope="row"><strong>Title</strong></TableCell>
-                                <TableCell><strong>Released Date</strong></TableCell>
-                                <TableCell><strong>Ratings</strong></TableCell>
+                                <TableCell><strong>Sl. No.</strong></TableCell>
+                                <TableCell><strong>Character</strong></TableCell>
+                                <TableCell component="th" scope="row"><strong>Movie Name</strong></TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {this.props.list.data ?
-                                this.props.list.data.results.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                                    return (
-                                        <MovieRow data={{data:row}}/>
-                                    )
-                                })
-                                :
-                                list.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+                            {
+                                list.cast.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
                                     return (
                                         <MovieRow data={row}/>
                                     )
                                 })
                             }
+
                         </TableBody>
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
                                     colSpan={3}
-                                    count={list.length}
+                                    count={list.cast.length}
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     onChangePage={this.handleChangePage}
@@ -198,47 +197,22 @@ class DataList extends React.Component {
 
 }
 
-const MovieRow = (props)=> {
-    const {data} = props.data;
-    console.log(props);
+const MovieRow = (props) => {
+    const {data} = props;
+    console.log(props.data);
     return (
-        <TableRow key={data.id}>
-
-            <TableCell>
-                <Avatar path={data.poster_path} title={''}/>
+        <TableRow key={data.movie.ids.tmdb}>
+            <TableCell>{data.movie.ids.tmdb}</TableCell>
+            <TableCell>{data.character != ''? data.character : 'NA'}</TableCell>
+            <TableCell component="th" scope="row">
+                {data.movie.title}
             </TableCell>
-            <TableCell component="th" scope="row" style={{fontSize: '16px', color: '#f50057 rtant'}}>
-                <Link to={{
-                    pathname: `/movie/${props.data.traktId}`,
-                    state: {
-                        data: data,
-                        isAMovie: true,
-
-                    }
-                }}>
-                    {data.original_title}
-                </Link>
-            </TableCell>
-            <TableCell>{data.release_date}</TableCell>
-            <TableCell>{data.vote_average}</TableCell>
         </TableRow>
     )
 }
 
-const Avatar = (props) => {
-    return (
-        <img
-            src={`https://image.tmdb.org/t/p/w500${props.path}`}
-            style={{maxHeight: 150}}
-            alt={`${props.title}`}/>
-    )
-}
-
-DataList.propTypes = {
-    classes: PropTypes.object.isRequired,
-    list: PropTypes.array.isRequired,
-    isAMovie: PropTypes.bool.isRequired,
-    onSelectionChange: PropTypes.func.isRequired
+ListOfWorkedMovies.propTypes = {
+    list: PropTypes.array.isRequired
 };
 
-export default withStyles(styles)(DataList);
+export default withStyles(styles)(ListOfWorkedMovies);
